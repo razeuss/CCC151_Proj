@@ -10,15 +10,17 @@ public class StudentPaymentInfo {
     private SimpleStringProperty first_name;
     private SimpleStringProperty middle_name;
     private SimpleStringProperty last_name;
+    private String year_level;
     private SimpleStringProperty first_sem_status;
     private SimpleStringProperty second_sem_status;
 
-    public StudentPaymentInfo(String id_number, String first_name, String middle_name, String last_name,
+    public StudentPaymentInfo(String id_number, String first_name, String middle_name, String last_name, String year_level,
                               String first_sem_status, String second_sem_status){
         this.id_number = new SimpleStringProperty(id_number);
         this.first_name = new SimpleStringProperty(first_name);
         this.middle_name = new SimpleStringProperty(middle_name);
         this.last_name = new SimpleStringProperty(last_name);
+        this.year_level = year_level;
         this.first_sem_status = new SimpleStringProperty(first_sem_status);
         this.second_sem_status = new SimpleStringProperty(second_sem_status);
     }
@@ -73,6 +75,14 @@ public class StudentPaymentInfo {
 
     public void setLast_name(String last_name) {
         this.last_name.set(last_name);
+    }
+
+    public String getYear_level() {
+        return year_level;
+    }
+
+    public void setYear_level(String year_level) {
+        this.year_level = year_level;
     }
 
     public String getFirst_sem_status() {

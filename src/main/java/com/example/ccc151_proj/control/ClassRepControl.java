@@ -93,8 +93,8 @@ public class ClassRepControl {
             Connection connect = DataManager.getConnect();
             //set up the query
             String user_data_query = "SELECT `first_name`, `middle_name`, `last_name`, `user_id`, `year_level`, `program_code`, `position`, `organization_code` "
-                    + "FROM `users` AS `u` LEFT JOIN `students` AS `s` ON `u`.`user_id` = `s`.`id_number` "
-                    + "LEFT JOIN `officers` AS `o` ON `u`.`user_id` = `o`.`officer_id` "
+                    + "FROM `users` AS u LEFT JOIN `students` AS s ON u.`user_id` = s.`id_number` "
+                    + "LEFT JOIN `officers` AS o ON u.`user_id` = o.`officer_id` "
                     + "WHERE `user_id` = \"" + user_id_number + "\";";
             //prepare then execute the query
             PreparedStatement setup_user_data = connect.prepareStatement(user_data_query);
@@ -112,6 +112,16 @@ public class ClassRepControl {
             //since a classroom rep can collect up to 2 contribution from 2 different organizations, get the second one also.
             result.next();
             String organization_code_data2 = result.getString("organization_code");
+
+            //in case the second row has the ec org_code
+            if (organization_code_data2.endsWith("-EC")){
+                //Concatenate both the string str1 and str2 and store it in str1
+                organization_code_data1 = organization_code_data1 + organization_code_data2;
+                //Extract str2 from updated str1
+                organization_code_data2 = organization_code_data1.substring(0, (organization_code_data1.length() - organization_code_data2.length()));
+                //Extract str1 from updated str1
+                organization_code_data1 = organization_code_data1.substring(organization_code_data2.length());
+            }
 
             user = new UserData(first_name_data, middle_name_data, last_name_data, user_id_data,
                     year_level_data, program_code_data, position_data,
@@ -135,14 +145,15 @@ public class ClassRepControl {
             Connection connect = DataManager.getConnect();
             String user_data_query = "SELECT `contribution_code`, `semester`,`amount` FROM `contributions` WHERE `academic_year` = \""
                     + academic_year + "\" AND `collecting_org_code` = \"" + org_code + "\";";
-            PreparedStatement setup_user_data = connect.prepareStatement(user_data_query);
-            ResultSet result = setup_user_data.executeQuery();
+            PreparedStatement get_contributions_data = connect.prepareStatement(user_data_query);
+            ResultSet result = get_contributions_data.executeQuery();
             while (result.next()){
                 String contribution_code = result.getString("contribution_code");
                 String semester = result.getString("semester");
                 Integer amount = result.getInt("amount");
                 contributions.add(new ContributionProperties(contribution_code, semester, amount));
             }
+            get_contributions_data.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -180,10 +191,7 @@ public class ClassRepControl {
         first_sem_column.setStyle("-fx-alignment: CENTER;");
         second_sem_column.setStyle("-fx-alignment: CENTER;");
 
-        //TODO: Change to accommodate MySql
-        ObservableList<StudentPaymentInfo> details_students = FXCollections.observableArrayList();
-        details_students.add(new StudentPaymentInfo("2022-0378", "Caine Ivan", "Recomata",
-                "Bautista", "Not Paid", "Not Paid"));
+        ObservableList<StudentPaymentInfo> details_students = get_payer_list("CCS-EC", "2023-2024");
         student_data_table.setItems(details_students);
     }
 
@@ -218,11 +226,78 @@ public class ClassRepControl {
         first_sem_column.setStyle("-fx-alignment: CENTER;");
         second_sem_column.setStyle("-fx-alignment: CENTER;");
 
-        //TODO: Change to accommodate MySql
-        ObservableList<StudentPaymentInfo> details_students = FXCollections.observableArrayList();
-        details_students.add(new StudentPaymentInfo("2022-3337", "Angel Claire", "Abrazado",
-                "Cabilla", "Not Paid", "Not Paid"));
+        ObservableList<StudentPaymentInfo> details_students = get_payer_list("COMSOC", "2023-2024");
         student_data_table.setItems(details_students);
+    }
+
+    private ObservableList<StudentPaymentInfo> get_payer_list(String org_code, String academic_year){
+        ObservableList<StudentPaymentInfo> member_list = FXCollections.observableArrayList();
+        String[] contribution_codes = {org_code + "_" + academic_year + "_1", org_code + "_" + academic_year + "_2"};
+        try {
+            Connection connect = DataManager.getConnect();
+            //get the list of every member in the organization
+            String members_data_query = "SELECT `id_number`, `first_name`,`middle_name`, `last_name`, `year_level` " +
+                    "FROM `members` AS m LEFT JOIN `students` AS s ON m.`member_id` = s.`id_number` " +
+                    "WHERE m.`organization_code` = \"" + org_code + "\" " +
+                    "AND s.`program_code` = \"" + user.getProgram_code() + "\" " +
+                    "AND s.`year_level` = \"" + user.getYear_level() + "\";";
+            PreparedStatement get_members_data = connect.prepareStatement(members_data_query);
+            ResultSet result = get_members_data.executeQuery();
+            while (result.next()){
+                String id_number = result.getString("id_number");
+                String first_name = result.getString("first_name");
+                String middle_name = result.getString("middle_name");
+                String last_name = result.getString("last_name");
+                String year_level = result.getString("year_level");
+
+                //get their status for first sem
+                String payment_status_query = "SELECT `status` FROM `payments` WHERE `payer_id` = \"" + id_number + "\" " +
+                        "AND `contribution_code` = \"" + contribution_codes[0] +"\";";
+                PreparedStatement get_payment_status = connect.prepareStatement(payment_status_query);
+                ResultSet result_2 = get_payment_status.executeQuery();
+                String first_sem_status = "Not Paid";
+                Outer: while (result_2.next()){
+                    switch (result_2.getString("status")){
+                        case "Accepted":
+                            first_sem_status = "Paid";
+                            break Outer;
+                        case "Pending":
+                            first_sem_status = "Pending";
+                            break Outer;
+                        default:
+                            break Outer;
+                    }
+                }
+                result_2.close();
+
+                //get their status for second sem
+                payment_status_query = "SELECT `status` FROM `payments` WHERE `payer_id` = \"" + id_number + "\" " +
+                        "AND `contribution_code` = \"" + contribution_codes[1] +"\";";
+                get_payment_status = connect.prepareStatement(payment_status_query);
+                result_2 = get_payment_status.executeQuery();
+                String second_sem_status = "Not Paid";
+                Outer: while (result_2.next()){
+                    switch (result_2.getString("status")){
+                        case "Accepted":
+                            second_sem_status = "Paid";
+                            break Outer;
+                        case "Pending":
+                            second_sem_status = "Pending";
+                            break Outer;
+                        default:
+                            break Outer;
+                    }
+                }
+                result_2.close();
+
+                member_list.add(new StudentPaymentInfo(id_number, first_name, middle_name, last_name, year_level, first_sem_status, second_sem_status));
+            }
+            get_members_data.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return member_list;
     }
 
     @FXML
@@ -243,19 +318,27 @@ public class ClassRepControl {
     private void menu_first_sem() throws IOException {
         StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
         if (payer != null){
-            Stage transaction_stage = new Stage();
-            transaction_stage.initModality(Modality.APPLICATION_MODAL);
+            if (payer.getFirst_sem_status().equals("Pending")){
+                Alert non_selected = new Alert(Alert.AlertType.ERROR);
+                non_selected.setTitle("Multiple Transaction Error");
+                non_selected.setHeaderText(null);
+                non_selected.setContentText("Previous payment is still unverified, try again after verification.");
+                non_selected.showAndWait();
+            } else {
+                Stage transaction_stage = new Stage();
+                transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
-            Parent transaction_parent = fxmlLoader.load();
-            TransactionProcess transaction_process = fxmlLoader.getController();
-            transaction_process.setPayer(payer);
-            transaction_process.initialize(contribution_data_table.getItems().get(0).getContribution_code());
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
+                Parent transaction_parent = fxmlLoader.load();
+                TransactionProcess transaction_process = fxmlLoader.getController();
+                transaction_process.setPayer(payer);
+                transaction_process.initialize(contribution_data_table.getItems().get(0).getContribution_code());
 
-            Scene transaction_scene = new Scene(transaction_parent);
-            transaction_stage.setTitle("Contribution Payment Transaction");
-            transaction_stage.setScene(transaction_scene);
-            transaction_stage.show();
+                Scene transaction_scene = new Scene(transaction_parent);
+                transaction_stage.setTitle("Contribution Payment Transaction");
+                transaction_stage.setScene(transaction_scene);
+                transaction_stage.show();
+            }
         } else {
             Alert non_selected = new Alert(Alert.AlertType.ERROR);
             non_selected.setTitle("No Student Selected");
@@ -269,19 +352,27 @@ public class ClassRepControl {
     private void menu_second_sem() throws IOException {
         StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
         if (payer != null){
-            Stage transaction_stage = new Stage();
-            transaction_stage.initModality(Modality.APPLICATION_MODAL);
+            if (payer.getSecond_sem_status().equals("Pending")){
+                Alert non_selected = new Alert(Alert.AlertType.ERROR);
+                non_selected.setTitle("Multiple Transaction Error");
+                non_selected.setHeaderText(null);
+                non_selected.setContentText("Previous payment is still unverified, try again after verification.");
+                non_selected.showAndWait();
+            } else {
+                Stage transaction_stage = new Stage();
+                transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
-            Parent transaction_parent = fxmlLoader.load();
-            TransactionProcess transaction_process = fxmlLoader.getController();
-            transaction_process.setPayer(payer);
-            transaction_process.initialize(contribution_data_table.getItems().get(1).getContribution_code());
+                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
+                Parent transaction_parent = fxmlLoader.load();
+                TransactionProcess transaction_process = fxmlLoader.getController();
+                transaction_process.setPayer(payer);
+                transaction_process.initialize(contribution_data_table.getItems().get(1).getContribution_code());
 
-            Scene transaction_scene = new Scene(transaction_parent);
-            transaction_stage.setTitle("Contribution Payment Transaction");
-            transaction_stage.setScene(transaction_scene);
-            transaction_stage.show();
+                Scene transaction_scene = new Scene(transaction_parent);
+                transaction_stage.setTitle("Contribution Payment Transaction");
+                transaction_stage.setScene(transaction_scene);
+                transaction_stage.show();
+            }
         } else {
             Alert non_selected = new Alert(Alert.AlertType.ERROR);
             non_selected.setTitle("No Student Selected");

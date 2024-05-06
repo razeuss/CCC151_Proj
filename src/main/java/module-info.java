@@ -1,4 +1,5 @@
 module com.example.ccc151_proj {
+    requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;

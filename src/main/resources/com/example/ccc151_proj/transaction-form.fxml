@@ -51,10 +51,10 @@
       </Button>
       <TextField fx:id="transaction_payer_id" editable="false" layoutX="180.0" layoutY="87.0" prefHeight="45.0" prefWidth="250.0" />
       <TextField fx:id="transaction_payer_name" editable="false" layoutX="180.0" layoutY="152.0" prefHeight="45.0" prefWidth="250.0" />
-      <TextField fx:id="transaction_amount" layoutX="180.0" layoutY="282.0" prefHeight="45.0" prefWidth="250.0" />
+      <TextField fx:id="transaction_amount" editable="false" layoutX="180.0" layoutY="282.0" prefHeight="45.0" prefWidth="250.0" />
       <TextField fx:id="transaction_semester" editable="false" layoutX="180.0" layoutY="346.0" prefHeight="45.0" prefWidth="250.0" />
       <TextField fx:id="transaction_payer_receipt" layoutX="180.0" layoutY="474.0" prefHeight="45.0" prefWidth="250.0" />
-      <ComboBox fx:id="transaction_payer_year" layoutX="180.0" layoutY="217.0" prefHeight="45.0" prefWidth="250.0" />
+      <ComboBox fx:id="transaction_payer_year" disable="true" layoutX="180.0" layoutY="217.0" prefHeight="45.0" prefWidth="250.0" />
       <ComboBox fx:id="transaction_payment_mode" layoutX="180.0" layoutY="411.0" prefHeight="45.0" prefWidth="250.0" />
       <Label layoutX="28.0" layoutY="482.0" text="Payer Receipt:">
          <font>
