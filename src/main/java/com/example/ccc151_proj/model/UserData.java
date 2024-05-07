@@ -7,6 +7,7 @@ public class UserData {
     private String first_name;
     private String middle_name;
     private String last_name;
+    private String suffix_name;
     private String id_number;
     private String year_level;
     private String program_code;
@@ -17,9 +18,11 @@ public class UserData {
 
     /**
      * If the user is a class rep or with multiple organization.
+     *
      * @param first_name
      * @param middle_name
      * @param last_name
+     * @param suffix_name
      * @param id_number
      * @param year_level
      * @param program_code
@@ -27,11 +30,12 @@ public class UserData {
      * @param ec_code
      * @param society_code
      */
-    public UserData(String first_name, String middle_name, String last_name, String id_number, String year_level,
-                    String program_code, String position, String ec_code, String society_code){
+    public UserData(String first_name, String middle_name, String last_name, String suffix_name, String id_number, String year_level,
+                    String program_code, String position, String ec_code, String society_code) {
         this.first_name = first_name;
         this.middle_name = middle_name;
         this.last_name = last_name;
+        this.suffix_name = suffix_name;
         this.id_number = id_number;
         this.year_level = year_level;
         this.program_code = program_code;
@@ -46,17 +50,19 @@ public class UserData {
      * @param first_name
      * @param middle_name
      * @param last_name
+     * @param suffix_name
      * @param id_number
      * @param year_level
      * @param program_code
      * @param position
      * @param org_code
      */
-    public UserData(String first_name, String middle_name, String last_name, String id_number, String year_level,
-                    String program_code, String position, String org_code){
+    public UserData(String first_name, String middle_name, String last_name, String suffix_name, String id_number, String year_level,
+                    String program_code, String position, String org_code) {
         this.first_name = first_name;
         this.middle_name = middle_name;
         this.last_name = last_name;
+        this.suffix_name = suffix_name;
         this.id_number = id_number;
         this.year_level = year_level;
         this.program_code = program_code;
@@ -90,6 +96,14 @@ public class UserData {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
+    }
+
+    public String getSuffix_name() {
+        return suffix_name;
+    }
+
+    public void setSuffix_name(String suffix_name) {
+        this.suffix_name = suffix_name;
     }
 
     public String getId_number() {

@@ -1,6 +1,5 @@
 package com.example.ccc151_proj;
 
-import com.example.ccc151_proj.model.DataManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,7 +9,9 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    public static void main(String[] args) {launch(args);}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage login_stage) throws IOException {

@@ -11,8 +11,11 @@ import java.sql.SQLException;
  */
 public class DataManager {
     private static Connection connect;
+    //TODO: Change the Academic Year often as I don't know how to change it automatically :<<
+    private static String academic_year = "2023-2024";
 
-    public DataManager(){}
+    public DataManager() {
+    }
 
     /**
      * Create a connection to the database.
@@ -28,15 +31,7 @@ public class DataManager {
             String username = "root";
             String password = "rootPassword";
 
-            connect = DriverManager.getConnection("jdbc:" + sql_name + "://" + connection_name + ":" + port + "/" + schema_name,
-                    username, password);
-
-            /*
-            * Alert connection_success = new Alert(Alert.AlertType.CONFIRMATION);
-            connection_success.setTitle("Database Connection Success");
-            connection_success.setHeaderText(null);
-            connection_success.setContentText("Connection Successful");
-            connection_success.showAndWait();*/
+            connect = DriverManager.getConnection("jdbc:" + sql_name + "://" + connection_name + ":" + port + "/" + schema_name, username, password);
         } catch (SQLException | ClassNotFoundException e) {
             Alert connection_error = new Alert(Alert.AlertType.ERROR);
             connection_error.setTitle("Database Connection Error");
@@ -48,10 +43,19 @@ public class DataManager {
 
     /**
      * Get the connection from the database.
-     * @return
+     *
+     * @return connection to the database
      */
     public static Connection getConnect() {
         return connect;
+    }
+
+    public static String getAcademic_year() {
+        return academic_year;
+    }
+
+    public static void setAcademic_year(String academic_year) {
+        DataManager.academic_year = academic_year;
     }
 
 }

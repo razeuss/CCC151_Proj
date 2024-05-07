@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -53,7 +54,6 @@
       <TextField fx:id="transaction_payer_name" editable="false" layoutX="180.0" layoutY="152.0" prefHeight="45.0" prefWidth="250.0" />
       <TextField fx:id="transaction_amount" editable="false" layoutX="180.0" layoutY="282.0" prefHeight="45.0" prefWidth="250.0" />
       <TextField fx:id="transaction_semester" editable="false" layoutX="180.0" layoutY="346.0" prefHeight="45.0" prefWidth="250.0" />
-      <TextField fx:id="transaction_payer_receipt" layoutX="180.0" layoutY="474.0" prefHeight="45.0" prefWidth="250.0" />
       <ComboBox fx:id="transaction_payer_year" disable="true" layoutX="180.0" layoutY="217.0" prefHeight="45.0" prefWidth="250.0" />
       <ComboBox fx:id="transaction_payment_mode" layoutX="180.0" layoutY="411.0" prefHeight="45.0" prefWidth="250.0" />
       <Label layoutX="28.0" layoutY="482.0" text="Payer Receipt:">
@@ -61,5 +61,7 @@
             <Font size="20.0" />
          </font>
       </Label>
+      <Button fx:id="add_receipt_button" disable="true" layoutX="349.0" layoutY="485.0" mnemonicParsing="false" onAction="#addReceiptAction" text="Add Receipt" />
+      <Hyperlink fx:id="receipt_link" alignment="CENTER" disable="true" layoutX="180.0" layoutY="479.0" onAction="#receiptViewer" onDragDropped="#receiptDropped" onDragOver="#receiptDragOver" prefHeight="37.0" prefWidth="160.0" text="No File Chosen" wrapText="true" />
    </children>
 </AnchorPane>

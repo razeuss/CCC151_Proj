@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -93,22 +94,22 @@
             </Text>
          </children>
       </Pane>
-      <Pane layoutX="321.0" layoutY="132.0" prefHeight="150.0" prefWidth="1095.0" style="-fx-border-style: dashed dotted; -fx-border-color: rgba(0,0,0,.29);">
+      <Pane layoutX="321.0" layoutY="132.0" prefHeight="115.0" prefWidth="1095.0" style="-fx-border-style: dashed dotted; -fx-border-color: rgba(0,0,0,.29);">
          <children>
             <TextField fx:id="contribution_info" alignment="CENTER" blendMode="SRC_ATOP" editable="false" focusTraversable="false" layoutX="26.0" layoutY="-25.0" prefHeight="51.0" prefWidth="246.0" style="-fx-background-color: rgba(255,255,255,0.5);">
                <font>
                   <Font size="24.0" />
                </font></TextField>
-            <Label layoutX="26.0" layoutY="62.0" prefHeight="27.0" prefWidth="163.0" text="Organization Code:" textFill="#0000008d">
+            <Label layoutX="69.0" layoutY="51.0" prefHeight="27.0" prefWidth="163.0" text="Organization Code:" textFill="#0000008d">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="org_code" editable="false" focusTraversable="false" layoutX="189.0" layoutY="56.0" prefHeight="26.0" style="-fx-background-color: #ffffff; -fx-alignment: CENTER;">
+            <TextField fx:id="org_code" editable="false" focusTraversable="false" layoutX="232.0" layoutY="45.0" prefHeight="26.0" style="-fx-background-color: #ffffff; -fx-alignment: CENTER;">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></TextField>
-            <TableView fx:id="contribution_data_table" focusTraversable="false" layoutX="537.0" layoutY="31.0" pickOnBounds="false" prefHeight="75.0" prefWidth="447.0" style="-fx-background-color: #ffffff;">
+            <TableView fx:id="contribution_data_table" focusTraversable="false" layoutX="580.0" layoutY="20.0" pickOnBounds="false" prefHeight="75.0" prefWidth="447.0" style="-fx-background-color: #ffffff;">
               <columns>
                 <TableColumn fx:id="code_column" editable="false" prefWidth="75.0" sortable="false" text="Contribution Code" />
                   <TableColumn fx:id="sem_column" editable="false" prefWidth="75.0" sortable="false" text="Semester" />
@@ -125,12 +126,13 @@
       </Pane>
       <TableView fx:id="student_data_table" focusTraversable="false" layoutX="321.0" layoutY="317.0" prefHeight="515.0" prefWidth="1095.0">
         <columns>
-          <TableColumn fx:id="id_column" prefWidth="75.0" text="ID Number" editable="false" sortable="false" />
-          <TableColumn fx:id="first_name_column" prefWidth="75.0" text="First Name" editable="false" sortable="false" />
-            <TableColumn fx:id="middle_name_column" prefWidth="75.0" text="Middle Name" editable="false" sortable="false" />
-            <TableColumn fx:id="last_name_column" prefWidth="75.0" text="Last Name" editable="false" sortable="false" />
-            <TableColumn fx:id="first_sem_column" prefWidth="75.0" text="First Semester Status" editable="false" sortable="false" />
-            <TableColumn fx:id="second_sem_column" prefWidth="75.0" text="Second Semester Status" editable="false" sortable="false" />
+          <TableColumn fx:id="id_column" editable="false" prefWidth="75.0" sortable="false" text="ID Number" />
+          <TableColumn fx:id="first_name_column" editable="false" prefWidth="75.0" sortable="false" text="First Name" />
+            <TableColumn fx:id="middle_name_column" editable="false" prefWidth="75.0" sortable="false" text="Middle Name" />
+            <TableColumn fx:id="last_name_column" editable="false" prefWidth="75.0" sortable="false" text="Last Name" />
+            <TableColumn fx:id="suffix_name_column" editable="false" prefWidth="75.0" sortable="false" text="Suffix" />
+            <TableColumn fx:id="first_sem_column" editable="false" prefWidth="75.0" sortable="false" text="First Semester Status" />
+            <TableColumn fx:id="second_sem_column" editable="false" prefWidth="75.0" sortable="false" text="Second Semester Status" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -138,11 +140,27 @@
          <contextMenu>
             <ContextMenu fx:id="student_table_context_menu">
               <items>
-                 <MenuItem fx:id="transact_first_sem" mnemonicParsing="false" text="Transact First Sem" onAction="#menu_first_sem"/>
-                 <MenuItem fx:id="transact_second_sem" mnemonicParsing="false" text="Transact Second Sem" onAction="#menu_second_sem"/>
+                 <MenuItem fx:id="transact_first_sem" mnemonicParsing="false" onAction="#menu_first_sem" text="Transact First Sem" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                 <MenuItem fx:id="transact_second_sem" mnemonicParsing="false" onAction="#menu_second_sem" text="Transact Second Sem" />
               </items>
             </ContextMenu>
          </contextMenu>
       </TableView>
+      <TextField fx:id="search_id" layoutX="429.0" layoutY="262.0" prefHeight="39.0" prefWidth="320.0" promptText="Search ID Number">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </TextField>
+      <Button fx:id="refresh_data" layoutX="935.0" layoutY="266.0" mnemonicParsing="false" onAction="#resetSearch" prefHeight="31.0" prefWidth="99.0" text="Refresh">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="search_button" layoutX="780.0" layoutY="266.0" mnemonicParsing="false" onAction="#searchID" prefHeight="30.0" prefWidth="109.0" text="Search">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
