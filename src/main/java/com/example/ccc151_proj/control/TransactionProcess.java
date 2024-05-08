@@ -4,7 +4,10 @@ import com.example.ccc151_proj.model.DataManager;
 import com.example.ccc151_proj.model.StudentPaymentInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -70,7 +73,7 @@ public class TransactionProcess {
      *
      * @param contribution_code
      */
-    public void initialize(String contribution_code) {
+    public void initialize(String contribution_code, boolean transact) {
         // get the information of the contribution from its code
         this.contribution_code = contribution_code;
         String[] contribution_details = this.contribution_code.split("_");
@@ -82,6 +85,13 @@ public class TransactionProcess {
         transaction_label.setText(org_code + " Transaction");
         transaction_semester.setText(semester);
 
+        if (transact)
+            setupTransaction();
+        else
+            viewTransaction();
+    }
+
+    private void setupTransaction(){
         // get the amount
         try {
             Connection connect = DataManager.getConnect();
@@ -117,13 +127,8 @@ public class TransactionProcess {
         // disable the receipt input if the mode is Cash
         transaction_payment_mode.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             // disable the input of receipt when the mode of payment is "Cash"
-            if (transaction_payment_mode.getValue().equals("Cash")) {
-                add_receipt_button.setDisable(true);
-                receipt_link.setDisable(true);
-            } else {
-                add_receipt_button.setDisable(false);
-                receipt_link.setDisable(false);
-            }
+            add_receipt_button.setDisable(transaction_payment_mode.getValue().equals("Cash"));
+            receipt_link.setDisable(transaction_payment_mode.getValue().equals("Cash"));
         });
     }
 
@@ -132,9 +137,8 @@ public class TransactionProcess {
      */
     @FXML
     private void recordTransaction() {
-        //process here
         try {
-            String update_payer_status_query = "INSERT INTO `payments` (`contribution_code`, `payer_id`, `payment_mode`, `payer_receipt`, `status`)\n" +
+            String update_payer_status_query = "INSERT INTO `pays` (`contribution_code`, `payer_id`, `payment_mode`, `payer_receipt`, `status`)\n" +
                     "VALUES (?, ?, ?, ?, \"Pending\");";
             PreparedStatement insert_payer_status = connect.prepareStatement(update_payer_status_query);
             insert_payer_status.setString(1, contribution_code);
@@ -155,7 +159,7 @@ public class TransactionProcess {
             insert_payer_status.executeUpdate();
             insert_payer_status.close();
 
-            String transaction_id_query = "SELECT `transaction_id` FROM `payments` WHERE `contribution_code` = \"" + contribution_code
+            String transaction_id_query = "SELECT `transaction_id` FROM `pays` WHERE `contribution_code` = \"" + contribution_code
                     + "\" AND `payer_id` = \"" + payer.getId_number() + "\";";
             PreparedStatement get_transaction_id = connect.prepareStatement(transaction_id_query);
             ResultSet result_id = get_transaction_id.executeQuery();
@@ -179,6 +183,67 @@ public class TransactionProcess {
             payer.setSecond_sem_status("Pending");
         //close the window
         ((Stage) transaction_scene.getScene().getWindow()).close();
+    }
+
+    private void viewTransaction(){
+        try {
+            String latest_transaction_query = "SELECT `id_number`, `first_name`, `middle_name`, `last_name`, `suffix_name`, "
+                    + "`year_level`, `amount`, `semester`, `transaction_id`, `payment_mode`, `payer_receipt`\n"
+                    + "FROM `pays` AS p LEFT JOIN `contributions` AS c ON p.`contribution_code` = c.`contribution_code`\n"
+                    + "LEFT JOIN `students` AS s ON p.`payer_id` = s.`id_number` "
+                    + "WHERE c.`contribution_code` = \"" + contribution_code + "\" "
+                    + "AND p.`payer_id` = \"" + payer.getId_number() + "\" "
+                    + "ORDER BY `transaction_id` DESC;";
+            PreparedStatement get_latest_transaction = connect.prepareStatement(latest_transaction_query);
+            ResultSet result = get_latest_transaction.executeQuery();
+            result.next();
+            transaction_payer_id.setText(result.getString("id_number"));
+            transaction_payer_name.setText(result.getString("last_name") + ", " + result.getString("first_name") + " "
+                    + result.getString("middle_name") + " " + result.getString("suffix_name"));
+            ObservableList<String> payer_year =  FXCollections.observableArrayList();
+            payer_year.add(result.getString("year_level"));
+            transaction_payer_year.setItems(payer_year);
+            transaction_payer_year.getSelectionModel().select(0);
+            transaction_amount.setText(result.getString("amount"));
+            transaction_semester.setText(result.getString("semester"));
+            ObservableList<String> payment_mode =  FXCollections.observableArrayList();
+            payment_mode.add(result.getString("payment_mode"));
+            transaction_payment_mode.setItems(payment_mode);
+            transaction_payment_mode.setDisable(true);
+            transaction_payment_mode.getSelectionModel().select(0);
+            receipt_link.setText("Transaction #" + result.getString("transaction_id") + " Receipt");
+            receipt_link.setDisable(transaction_payment_mode.getValue().equals("Cash"));
+            Blob receipt_image = result.getBlob("payer_receipt");
+            receipt_link.setOnAction(e -> {
+                Stage receipt_stage = new Stage();
+                receipt_stage.initModality(Modality.APPLICATION_MODAL);
+                try {
+                    InputStream stream = receipt_image.getBinaryStream();
+                    Image image = new Image(stream);
+                    //Creating the image view
+                    ImageView imageView = new ImageView();
+                    //Setting image to the image view
+                    imageView.setImage(image);
+                    //Setting the image view parameters
+                    imageView.setX(0);
+                    imageView.setY(0);
+                    imageView.setFitHeight(600);
+                    imageView.setFitWidth(500);
+                    imageView.setPreserveRatio(true);
+                    //Setting the Scene object
+                    Group root = new Group(imageView);
+                    Scene scene = new Scene(root);
+                    receipt_stage.setTitle("Payment Receipt.");
+                    receipt_stage.setScene(scene);
+                    receipt_stage.setResizable(false);
+                    receipt_stage.show();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

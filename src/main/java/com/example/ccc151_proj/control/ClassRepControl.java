@@ -83,6 +83,10 @@ public class ClassRepControl {
     private Button society_button;
     @FXML
     private TextField search_id;
+    @FXML
+    private MenuItem show_first_sem_transaction;
+    @FXML
+    private MenuItem show_second_sem_transaction;
     private String academic_year;
     private UserData user;
 
@@ -132,7 +136,7 @@ public class ClassRepControl {
             String user_data_query = "SELECT `first_name`, `middle_name`, `last_name`, `suffix_name`, `user_id`, "
                     + "`year_level`, `program_code`, `position`, `organization_code` "
                     + "FROM `users` AS u LEFT JOIN `students` AS s ON u.`user_id` = s.`id_number` "
-                    + "LEFT JOIN `officers` AS o ON u.`user_id` = o.`officer_id` "
+                    + "LEFT JOIN `manages` AS o ON u.`user_id` = o.`officer_id` "
                     + "WHERE `user_id` = \"" + user_id_number + "\";";
 
             //prepare then execute the query
@@ -265,7 +269,7 @@ public class ClassRepControl {
                 String year_level = result.getString("year_level");
 
                 //get their status for first sem
-                String payment_status_query = "SELECT `status` FROM `payments` "
+                String payment_status_query = "SELECT `status` FROM `pays` "
                         + "WHERE `payer_id` = \"" + id_number + "\" "
                         + "AND `contribution_code` = \"" + contribution_data_table.getItems().get(0).getContribution_code() + "\" "
                         + "ORDER BY `transaction_id` DESC;";
@@ -278,14 +282,14 @@ public class ClassRepControl {
                     first_sem_status = switch (status) {
                         case "Accepted" -> "Paid";
                         case "Pending" -> status;
-                        case "Rejected" -> "Not Paid";
+                        case "Rejected" -> "Rejected";
                         default -> first_sem_status;
                     };
                 }
                 result_2.close();
 
                 //get their status for second sem
-                payment_status_query = "SELECT `status` FROM `payments` WHERE `payer_id` = \"" + id_number + "\" "
+                payment_status_query = "SELECT `status` FROM `pays` WHERE `payer_id` = \"" + id_number + "\" "
                         + "AND `contribution_code` = \"" + contribution_data_table.getItems().get(1).getContribution_code() + "\" "
                         + "ORDER BY `transaction_id` DESC;";
                 get_payment_status = connect.prepareStatement(payment_status_query);
@@ -297,7 +301,7 @@ public class ClassRepControl {
                     second_sem_status = switch (status) {
                         case "Accepted" -> "Paid";
                         case "Pending" -> status;
-                        case "Rejected" -> "Not Paid";
+                        case "Rejected" -> "Rejected";
                         default -> second_sem_status;
                     };
                 }
@@ -351,7 +355,7 @@ public class ClassRepControl {
                 Parent transaction_parent = fxmlLoader.load();
                 TransactionProcess transaction_process = fxmlLoader.getController();
                 transaction_process.setPayer(payer);
-                transaction_process.initialize(contribution_data_table.getItems().get(0).getContribution_code());
+                transaction_process.initialize(contribution_data_table.getItems().get(0).getContribution_code(), true);
 
                 Scene transaction_scene = new Scene(transaction_parent);
                 transaction_stage.setTitle("Contribution Payment Transaction");
@@ -365,6 +369,42 @@ public class ClassRepControl {
             non_selected.setContentText("Please Select a Student.");
             non_selected.showAndWait();
         }
+    }
+
+    @FXML
+    void view_first_sem() throws IOException {
+        StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
+        Stage transaction_stage = new Stage();
+        transaction_stage.initModality(Modality.APPLICATION_MODAL);
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
+        Parent transaction_parent = fxmlLoader.load();
+        TransactionProcess transaction_process = fxmlLoader.getController();
+        transaction_process.setPayer(payer);
+        transaction_process.initialize(contribution_data_table.getItems().get(0).getContribution_code(), false);
+
+        Scene transaction_scene = new Scene(transaction_parent);
+        transaction_stage.setTitle("View Transaction");
+        transaction_stage.setScene(transaction_scene);
+        transaction_stage.show();
+    }
+
+    @FXML
+    void view_second_sem() throws IOException {
+        StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
+        Stage transaction_stage = new Stage();
+        transaction_stage.initModality(Modality.APPLICATION_MODAL);
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
+        Parent transaction_parent = fxmlLoader.load();
+        TransactionProcess transaction_process = fxmlLoader.getController();
+        transaction_process.setPayer(payer);
+        transaction_process.initialize(contribution_data_table.getItems().get(1).getContribution_code(), false);
+
+        Scene transaction_scene = new Scene(transaction_parent);
+        transaction_stage.setTitle("View Transaction");
+        transaction_stage.setScene(transaction_scene);
+        transaction_stage.show();
     }
 
     @FXML
@@ -391,7 +431,7 @@ public class ClassRepControl {
                 Parent transaction_parent = fxmlLoader.load();
                 TransactionProcess transaction_process = fxmlLoader.getController();
                 transaction_process.setPayer(payer);
-                transaction_process.initialize(contribution_data_table.getItems().get(1).getContribution_code());
+                transaction_process.initialize(contribution_data_table.getItems().get(1).getContribution_code(), true);
 
                 Scene transaction_scene = new Scene(transaction_parent);
                 transaction_stage.setTitle("Contribution Payment Transaction");
@@ -432,7 +472,7 @@ public class ClassRepControl {
                     String year_level = result.getString("year_level");
 
                     //get their status for first sem
-                    String payment_status_query = "SELECT `status` FROM `payments` "
+                    String payment_status_query = "SELECT `status` FROM `pays` "
                             + "WHERE `payer_id` = \"" + id_number + "\" "
                             + "AND `contribution_code` = \"" + contribution_data_table.getItems().get(0).getContribution_code() + "\" "
                             + "ORDER BY `transaction_id` DESC;";
@@ -445,14 +485,14 @@ public class ClassRepControl {
                         first_sem_status = switch (status) {
                             case "Accepted" -> "Paid";
                             case "Pending" -> status;
-                            case "Rejected" -> "Not Paid";
+                            case "Rejected" -> "Rejected";
                             default -> first_sem_status;
                         };
                     }
                     result_2.close();
 
                     //get their status for second sem
-                    payment_status_query = "SELECT `status` FROM `payments` WHERE `payer_id` = \"" + id_number + "\" "
+                    payment_status_query = "SELECT `status` FROM `pays` WHERE `payer_id` = \"" + id_number + "\" "
                             + "AND `contribution_code` = \"" + contribution_data_table.getItems().get(1).getContribution_code() + "\" "
                             + "ORDER BY `transaction_id` DESC;";
                     get_payment_status = connect.prepareStatement(payment_status_query);
@@ -464,7 +504,7 @@ public class ClassRepControl {
                         second_sem_status = switch (status) {
                             case "Accepted" -> "Paid";
                             case "Pending" -> status;
-                            case "Rejected" -> "Not Paid";
+                            case "Rejected" -> "Rejected";
                             default -> second_sem_status;
                         };
                     }
@@ -493,5 +533,17 @@ public class ClassRepControl {
         search_id.clear();
         ObservableList<StudentPaymentInfo> details_students = getPayersList();
         student_data_table.setItems(details_students);
+    }
+
+    @FXML
+    private void setupContextMenu(){
+        StudentPaymentInfo student_selected = student_data_table.getSelectionModel().getSelectedItem();
+        if (student_selected == null){
+            show_first_sem_transaction.setDisable(true);
+            show_second_sem_transaction.setDisable(true);
+        } else {
+            show_first_sem_transaction.setDisable(student_selected.getFirst_sem_status().equals("Not Paid"));
+            show_second_sem_transaction.setDisable(student_selected.getSecond_sem_status().equals("Not Paid"));
+        }
     }
 }

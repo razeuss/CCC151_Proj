@@ -138,7 +138,7 @@ public class LoginProcess implements Initializable {
         String user_position = "";
         try {
             Connection connect = DataManager.getConnect();
-            String position_query = "SELECT `position` FROM `officers` WHERE `officer_id` = \"" + this.id_input.getText() + "\";";
+            String position_query = "SELECT `position` FROM `manages` WHERE `officer_id` = \"" + this.id_input.getText() + "\";";
             PreparedStatement check_user_position = connect.prepareStatement(position_query);
             ResultSet result = check_user_position.executeQuery();
             while (result.next()) user_position = result.getString("position");

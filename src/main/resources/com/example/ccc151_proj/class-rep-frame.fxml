@@ -109,7 +109,7 @@
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></TextField>
-            <TableView fx:id="contribution_data_table" focusTraversable="false" layoutX="580.0" layoutY="20.0" pickOnBounds="false" prefHeight="75.0" prefWidth="447.0" style="-fx-background-color: #ffffff;">
+            <TableView fx:id="contribution_data_table" focusTraversable="false" layoutX="583.0" layoutY="34.0" pickOnBounds="false" prefHeight="75.0" prefWidth="447.0" style="-fx-background-color: #ffffff;">
               <columns>
                 <TableColumn fx:id="code_column" editable="false" prefWidth="75.0" sortable="false" text="Contribution Code" />
                   <TableColumn fx:id="sem_column" editable="false" prefWidth="75.0" sortable="false" text="Semester" />
@@ -122,6 +122,11 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </TableView>
+            <Label layoutX="583.0" layoutY="6.0" prefHeight="27.0" prefWidth="188.0" text="Current Contributions:" textFill="#0000008d">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
       <TableView fx:id="student_data_table" focusTraversable="false" layoutX="321.0" layoutY="317.0" prefHeight="515.0" prefWidth="1095.0">
@@ -138,11 +143,15 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
          <contextMenu>
-            <ContextMenu fx:id="student_table_context_menu">
+            <ContextMenu fx:id="student_table_context_menu" onShown="#setupContextMenu">
               <items>
-                 <MenuItem fx:id="transact_first_sem" mnemonicParsing="false" onAction="#menu_first_sem" text="Transact First Sem" />
+                 <MenuItem fx:id="transact_first_sem" mnemonicParsing="false" onAction="#menu_first_sem" text="Transact First Semester Contribution" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                 <MenuItem fx:id="transact_second_sem" mnemonicParsing="false" onAction="#menu_second_sem" text="Transact Second Sem" />
+                 <MenuItem fx:id="show_first_sem_transaction" mnemonicParsing="false" onAction="#view_first_sem" text="Display First Semester Transaction" />
+                 <SeparatorMenuItem mnemonicParsing="false" />
+                 <MenuItem fx:id="transact_second_sem" mnemonicParsing="false" onAction="#menu_second_sem" text="Transact Second Semester Contribution" />
+                 <SeparatorMenuItem mnemonicParsing="false" />
+                 <MenuItem fx:id="show_second_sem_transaction" mnemonicParsing="false" onAction="#view_second_sem" text="Display Second Semester Transaction" />
               </items>
             </ContextMenu>
          </contextMenu>

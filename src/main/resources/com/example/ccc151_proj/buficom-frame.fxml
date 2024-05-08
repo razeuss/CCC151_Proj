@@ -278,7 +278,7 @@
                            <contextMenu>
                               <ContextMenu fx:id="student_table_context_menu11">
                                  <items>
-                                    <MenuItem fx:id="transact_first_sem11" mnemonicParsing="false" onAction="" text="Transact First Sem" />
+                                    <MenuItem fx:id="transact_first_sem11" mnemonicParsing="false" text="Transact First Sem" />
                                     <MenuItem fx:id="transact_second_sem11" mnemonicParsing="false" text="Transact Second Sem" />
                                  </items>
                               </ContextMenu>
