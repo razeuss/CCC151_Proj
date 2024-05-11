@@ -10,6 +10,7 @@ public class ContributionProperties {
     private final SimpleStringProperty contribution_code;
     private final SimpleStringProperty contribution_sem;
     private final SimpleIntegerProperty contribution_amount;
+    private SimpleStringProperty academic_year = null;
 
     public ContributionProperties(String contribution_code, String contribution_sem, Integer contribution_amount) {
         this.contribution_code = new SimpleStringProperty(contribution_code);
@@ -17,9 +18,26 @@ public class ContributionProperties {
         this.contribution_amount = new SimpleIntegerProperty(contribution_amount);
     }
 
+    public ContributionProperties(String contribution_code, String year_level, String contribution_sem, Integer contribution_amount) {
+        this.contribution_code = new SimpleStringProperty(contribution_code);
+        this.contribution_sem = new SimpleStringProperty(contribution_sem);
+        this.contribution_amount = new SimpleIntegerProperty(contribution_amount);
+        this.academic_year = new SimpleStringProperty(year_level);
+    }
+
     /*
     Setters and Getters.
      */
+    public void setAcademic_year(String academic_year){
+        this.academic_year.set(academic_year);
+    }
+    public String getAcademic_year() {
+        return academic_year.get();
+    }
+
+    public SimpleStringProperty academic_yearProperty() {
+        return academic_year;
+    }
 
     public String getContribution_code() {
         return contribution_code.get();

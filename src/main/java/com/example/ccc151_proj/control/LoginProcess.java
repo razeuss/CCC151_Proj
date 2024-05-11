@@ -9,9 +9,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -49,6 +53,10 @@ public class LoginProcess implements Initializable {
         academic_year = DataManager.getAcademic_year();
     }
 
+    public static String getAcademic_year() {
+        return academic_year;
+    }
+
     /**
      * Facilitates the login process and the display of the main frame based on the user's position.
      *
@@ -83,24 +91,35 @@ public class LoginProcess implements Initializable {
             Stage main_stage = new Stage();
             main_stage.setTitle("Contribution Payment System");
             main_stage.setResizable(false);
-            FXMLLoader fxmlLoader;
+
 
             if (user_position.equals("Classroom Representative")) {
                 // initialize the loader
-                fxmlLoader = new FXMLLoader(Main.class.getResource("class-rep-frame.fxml"));
-                Parent class_rep_parent = fxmlLoader.load();
+                FXMLLoader class_rep_loader = new FXMLLoader(Main.class.getResource("class-rep-frame.fxml"));
+                Parent class_rep_parent = class_rep_loader.load();
 
                 // initialize the controller
-                ClassRepControl class_rep_control = fxmlLoader.getController();
+                ClassRepControl class_rep_control = class_rep_loader.getController();
                 class_rep_control.initialize(this.id_input.getText(), LoginProcess.academic_year);
 
                 // create the scene
                 Scene class_rep_scene = new Scene(class_rep_parent);
                 main_stage.setScene(class_rep_scene);
             } else {
-                //TODO: Add display for the other positions and admin.
-                //frame_path = "buficom-frame.fxml";
-                System.out.println(user_position);
+                FXMLLoader buficom_info_loader = new FXMLLoader(Main.class.getResource("BUFICOM-FRAMES/buficom-info.fxml"));
+                FXMLLoader dashboard_loader = new FXMLLoader(Main.class.getResource("BUFICOM-FRAMES/verify-payments.fxml"));
+
+                AnchorPane info = buficom_info_loader.load();
+                AnchorPane dashboard = dashboard_loader.load();
+                HBox buficom_parent = new HBox(0);
+                buficom_parent.getChildren().add(info);
+                buficom_parent.getChildren().add(dashboard);
+                BuficomInfoControl buficom_info_control = buficom_info_loader.getController();
+                buficom_info_control.initialize(buficom_parent, this.id_input.getText(), getUserPosition());
+                VerifyPaymentsControl dashboard_control = dashboard_loader.getController();
+                dashboard_control.initialize(buficom_info_control.getOrg_Code(), LoginProcess.academic_year);
+                Scene buficom_scene = new Scene(buficom_parent);
+                main_stage.setScene(buficom_scene);
             }
             main_stage.show();
         } catch (IOException e) {
