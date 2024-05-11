@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="850.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ccc151_proj.control.BuficomInfoControl">
+   <children>
+      <Pane fx:id="user_menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="300.0" style="-fx-border-style: hidden solid none none; -fx-border-width: 1; -fx-border-color: #000000; -fx-background-color: #ffffff;">
+         <children>
+            <Pane layoutX="25.0" layoutY="99.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="283.0" prefWidth="250.0" style="-fx-border-style: dashed; -fx-border-color: rgba(0,0,0,.29);">
+               <children>
+                  <Label alignment="CENTER_RIGHT" layoutX="13.0" layoutY="146.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="124.0" text="Organization Code:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" layoutX="13.0" layoutY="206.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="124.0" text="Organization Name:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="org_code_textfield" editable="false" focusTraversable="false" layoutX="15.0" layoutY="172.0" prefHeight="30.0" prefWidth="221.0" style="-fx-background-color: #ffffff; -fx-alignment: CENTER;">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="org_name_textfield" editable="false" focusTraversable="false" layoutX="15.0" layoutY="232.0" prefHeight="30.0" prefWidth="221.0" style="-fx-background-color: #ffffff; -fx-alignment: CENTER;">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </TextField>
+                  <ImageView fx:id="org_image" fitHeight="122.0" fitWidth="115.0" layoutX="68.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../src/default-org-logo.jpg" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Button fx:id="verify_payments_button" alignment="CENTER" disable="true" layoutX="25.0" layoutY="462.0" mnemonicParsing="false" onAction="#verify_payments_clicked" prefHeight="72.0" prefWidth="250.0" style="-fx-background-color: #61C7E7; -fx-background-radius: 10px; -fx-border-radius: 10px;" text="Verify Payments" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="27.0" />
+               </font>
+            </Button>
+            <Button fx:id="students_records_button" alignment="CENTER" defaultButton="true" layoutX="25.0" layoutY="662.0" mnemonicParsing="false" onAction="#students_records_clicked" prefHeight="72.0" prefWidth="250.0" style="-fx-background-color: #61C7E7; -fx-background-radius: 10px; -fx-border-radius: 10px;" text="Students' Records" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Button>
+            <Button fx:id="transaction_history_button" alignment="CENTER" layoutX="25.0" layoutY="565.0" mnemonicParsing="false" onAction="#transaction_history_clicked" prefHeight="72.0" prefWidth="250.0" style="-fx-background-color: #61C7E7; -fx-background-radius: 10px; -fx-border-radius: 10px;" text="Transaction History" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="23.0" />
+               </font>
+            </Button>
+            <Pane prefHeight="75.0" prefWidth="300.0" style="-fx-background-color: #67B2CA; -fx-border-style: hidden solid none none;">
+               <children>
+                  <TextField fx:id="user_position_textfield" alignment="CENTER" editable="false" focusTraversable="false" layoutX="6.0" layoutY="6.0" prefHeight="64.0" prefWidth="289.0" style="-fx-background-color: #67B2CA; -fx-alignment: CENTER;">
+                     <font>
+                        <Font name="System Bold" size="21.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </Pane>
+            <Button fx:id="add_contribution_button" alignment="CENTER" defaultButton="true" layoutX="70.0" layoutY="390.0" mnemonicParsing="false" onAction="#add_contribution_button_clicked" prefHeight="30.0" prefWidth="161.0" style="-fx-background-color: #61C7E7; -fx-background-radius: 10px; -fx-border-radius: 10px;" text="Add Contribution" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
