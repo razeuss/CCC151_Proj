@@ -1,6 +1,9 @@
 package com.example.ccc151_proj.model;
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * Information of the unverified payments.
+ */
 public class UnverifiedPayment {
     private final SimpleStringProperty id_number;
     private final SimpleStringProperty first_name;
@@ -10,6 +13,16 @@ public class UnverifiedPayment {
     private final SimpleStringProperty status;
     private long transaction_id;
 
+    /**
+     * Object representing unverified payment.
+     * @param id_number
+     * @param first_name
+     * @param middle_name
+     * @param last_name
+     * @param suffix_name
+     * @param status
+     * @param transaction_id
+     */
     public UnverifiedPayment(String id_number, String first_name, String middle_name, String last_name, String suffix_name,
                              String status, long transaction_id){
         this.id_number = new SimpleStringProperty(id_number);

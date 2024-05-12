@@ -19,6 +19,9 @@ import java.io.InputStream;
 import java.sql.*;
 import java.util.Optional;
 
+/**
+ * Facilitates the verification form.
+ */
 public class VerifyTransactionControl {
     private static Connection connect;
     @FXML
@@ -45,16 +48,27 @@ public class VerifyTransactionControl {
 
     public VerifyTransactionControl(){}
 
+    /**
+     * Initialize the necessary data and connection for the transaction.
+     * @param payment
+     */
     public void initialize(UnverifiedPayment payment){
         connect = DataManager.getConnect();
         this.payment = payment;
+        setupData();
+    }
+
+    /**
+     * Set up the data of the transaction.
+     */
+    private void setupData(){
         try {
             String payment_info_query = "SELECT p.`contribution_code`, `transaction_datetime`, `amount`, `payment_mode`, `payer_receipt`, `transaction_message`\n" +
                     "FROM `pays` AS p LEFT JOIN `contributions` AS c ON p.`contribution_code` = c.`contribution_code`\n" +
                     "WHERE p.`transaction_id` =" + payment.getTransaction_id() + ";";
             PreparedStatement get_payment_info = connect.prepareStatement(payment_info_query);
             ResultSet result = get_payment_info.executeQuery();
-            while (result.next()){
+            if (result.next()){
                 transaction_label.setText(result.getString("contribution_code") + " Contribution");
                 transaction_payer_id.setText(payment.getId_number());
                 transaction_payer_name.setText(payment.getLast_name() + ", " + payment.getFirst_name() + " " + payment.getMiddle_name() + " " + payment.getSuffix_name());
@@ -84,6 +98,11 @@ public class VerifyTransactionControl {
         }
     }
 
+    /**
+     * Set up the frame that will display the receipt of the payment.
+     *
+     * @param receipt_image
+     */
     private void viewReceipt(Blob receipt_image){
         Stage receipt_stage = new Stage();
         receipt_stage.initModality(Modality.APPLICATION_MODAL);
@@ -112,15 +131,21 @@ public class VerifyTransactionControl {
         }
     }
 
+    /**
+     * Facilitates the transaction when accepted.
+     * @param event
+     */
     @FXML
     private void accept_button_clicked(ActionEvent event){
+        // ask for confirmation
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText("Is everything good to accept?");
         alert.setContentText("Finalize the payment?");
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
+        if (result.isPresent() && result.get() == ButtonType.OK){
             try {
+                // if confirmed
                 String accept_payment_query = "UPDATE `pays` SET `status` = \"Accepted\", `transaction_message` = ? " +
                         "WHERE `transaction_id` = ?;";
                 PreparedStatement update_payment = connect.prepareStatement(accept_payment_query);
@@ -139,19 +164,26 @@ public class VerifyTransactionControl {
         } else {
             alert.close();
         }
-        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();    // close the frame
     }
 
+    /**
+     * Facilitates the transaction when rejected.
+     * @param event
+     */
     @FXML
     private void reject_button_clicked(ActionEvent event){
         if (!transaction_comments.getText().isEmpty()){
+            // ask for confirmation
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmation Dialog");
             alert.setHeaderText("Is everything good to reject?");
             alert.setContentText("Finalize the payment?");
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK){
+            if (result.isPresent() && result.get() == ButtonType.OK){
                 try {
+                    // if confirmed
                     String accept_payment_query = "UPDATE `pays` SET `status` = \"Rejected\", `transaction_message` = ? " +
                             "WHERE `transaction_id` = ?;";
                     PreparedStatement update_payment = connect.prepareStatement(accept_payment_query);
@@ -170,8 +202,9 @@ public class VerifyTransactionControl {
             } else {
                 alert.close();
             }
-            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+            ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();    // close the frame
         } else {
+            // reason/s for rejection is required.
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Rejection Comment");
             alert.setHeaderText(null);

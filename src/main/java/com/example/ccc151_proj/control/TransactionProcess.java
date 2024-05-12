@@ -88,6 +88,9 @@ public class TransactionProcess {
         setupTransaction();
     }
 
+    /**
+     * Fetch and set up the data of the transaction.
+     */
     private void setupTransaction(){
         // get the amount
         try {
@@ -118,7 +121,7 @@ public class TransactionProcess {
         modes.add("GCash");
         modes.add("Others");
         transaction_payment_mode.setItems(modes);
-        transaction_payment_mode.getSelectionModel().select(0);
+        transaction_payment_mode.getSelectionModel().selectFirst();
         add_receipt_button.setDisable(true);
 
         // disable the receipt input if the mode is Cash
@@ -156,6 +159,7 @@ public class TransactionProcess {
             insert_payer_status.executeUpdate();
             insert_payer_status.close();
 
+            // for confirmation
             String transaction_id_query = "SELECT `transaction_id` FROM `pays` WHERE `contribution_code` = \"" + contribution_code
                     + "\" AND `payer_id` = \"" + payer.getId_number() + "\" ORDER BY `transaction_id` DESC;";
             PreparedStatement get_transaction_id = connect.prepareStatement(transaction_id_query);
@@ -178,14 +182,19 @@ public class TransactionProcess {
             payer.setFirst_sem_status("Pending");
         else
             payer.setSecond_sem_status("Pending");
+
         //close the window
         ((Stage) transaction_scene.getScene().getWindow()).close();
     }
 
+    /**
+     * Provide filechooser for selecting photo of the receipt.
+     */
     @FXML
     private void addReceiptAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Insert Receipt Photo.");
+
         // open the FileChooser on the folder of the currently selected photo
         if (!receipt_link.getText().equals("No File Chosen")) {
             String path = receipt_link.getText().replace('\\', '/');
@@ -205,15 +214,10 @@ public class TransactionProcess {
             receipt_link.setText(receipt_file.getAbsolutePath());
     }
 
-    @FXML
-    private void receiptDropped(DragEvent event) {
-        Dragboard dragboard = event.getDragboard();
-        if (dragboard.hasImage() || dragboard.hasFiles()) {
-            receipt_link.setText(dragboard.getFiles().get(0).getPath());
-        }
-        event.consume();
-    }
-
+    /**
+     * Facilitates if a photo is dragged over the hyperlink.
+     * @param event
+     */
     @FXML
     private void receiptDragOver(DragEvent event) {
         Dragboard dragboard = event.getDragboard();
@@ -226,6 +230,22 @@ public class TransactionProcess {
         event.consume();
     }
 
+    /**
+     * Facilitates if a photo is dropped on the hyperlink.
+     * @param event
+     */
+    @FXML
+    private void receiptDropped(DragEvent event) {
+        Dragboard dragboard = event.getDragboard();
+        if (dragboard.hasImage() || dragboard.hasFiles()) {
+            receipt_link.setText(dragboard.getFiles().get(0).getPath());
+        }
+        event.consume();
+    }
+
+    /**
+     * Facilitates the frame for viewing the receipt when clicking the hyperlink.
+     */
     @FXML
     private void receiptViewer() {
         if (!receipt_link.getText().equals("No File Chosen")) {
@@ -294,8 +314,10 @@ public class TransactionProcess {
      */
     public void setPayer(StudentPaymentInfo payer) {
         transaction_payer_id.setText(payer.getId_number());
-        transaction_payer_name.setText(payer.getLast_name() + ", " + payer.getFirst_name() + " " + payer.getMiddle_name()
-                + " " + payer.getSuffix_name());
+        transaction_payer_name.setText(payer.getLast_name() + ", "
+                + payer.getFirst_name() + " "
+                + payer.getMiddle_name() + " "
+                + payer.getSuffix_name());
         this.payer = payer;
     }
 

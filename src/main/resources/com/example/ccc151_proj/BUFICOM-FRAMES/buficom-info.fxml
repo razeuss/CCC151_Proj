@@ -66,7 +66,7 @@
                   </TextField>
                </children>
             </Pane>
-            <Button fx:id="add_contribution_button" alignment="CENTER" defaultButton="true" layoutX="70.0" layoutY="390.0" mnemonicParsing="false" onAction="#add_contribution_button_clicked" prefHeight="30.0" prefWidth="161.0" style="-fx-background-color: #61C7E7; -fx-background-radius: 10px; -fx-border-radius: 10px;" text="Add Contribution" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
+            <Button fx:id="edit_contribution_button" alignment="CENTER" defaultButton="true" layoutX="70.0" layoutY="390.0" mnemonicParsing="false" onAction="#edit_contribution_button_clicked" prefHeight="30.0" prefWidth="161.0" style="-fx-background-color: #61C7E7; -fx-background-radius: 10px; -fx-border-radius: 10px;" text="Edit Contribution" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>

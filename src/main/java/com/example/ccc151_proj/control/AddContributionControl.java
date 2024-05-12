@@ -36,15 +36,19 @@ public class AddContributionControl {
     @FXML
     private TableColumn<ContributionProperties, Integer> amount_column;
     @FXML
-    private Button clear_selection_button;
-    @FXML
     private Button edit_contribution_button;
-    public AddContributionControl(){}
 
-    public void initialize(String org_code, String academic_year){
+    public AddContributionControl() {
+    }
+
+    /**
+     * Set up the initial display and fetch the necessary data for the contributions.
+     * @param org_code
+     */
+    public void initialize(String org_code) {
         connect = DataManager.getConnect();
         this.org_code = org_code;
-        this.academic_year = academic_year;
+        this.academic_year = DataManager.getAcademic_year();
 
         organization_code_textfield.setText(this.org_code);
         academic_year_textfield.setText(this.academic_year);
@@ -55,25 +59,30 @@ public class AddContributionControl {
         semester_combobox.getSelectionModel().selectFirst();
         ObservableList<ContributionProperties> contribution_list = FXCollections.observableArrayList();
         try {
-            String contribution_info_query = "SELECT `contribution_code`, `semester`, `amount` FROM `contributions` " +
-                    "WHERE `collecting_org_code` = \"" + this.org_code + "\" " +
-                    "AND `academic_year` = \"" + this.academic_year + "\";";
+            String contribution_info_query = "SELECT `contribution_code`, `semester`, `amount` FROM `contributions` "
+                    + "WHERE `collecting_org_code` = \"" + this.org_code + "\" "
+                    + "AND `academic_year` = \"" + this.academic_year + "\";";
             PreparedStatement get_contribution_info = connect.prepareStatement(contribution_info_query);
             ResultSet result = get_contribution_info.executeQuery();
-            while (result.next()){
+            while (result.next()) {
                 String contribution_code = result.getString("contribution_code");
                 String semester = result.getString("semester");
                 Integer amount = result.getInt("amount");
 
                 contribution_list.add(new ContributionProperties(contribution_code, this.academic_year, semester, amount));
             }
+            result.close();
             setupContributionData(contribution_list);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void setupContributionData(ObservableList<ContributionProperties> data){
+    /**
+     * Set up and display the contributions collected by the organization in this academic year.
+     * @param data
+     */
+    private void setupContributionData(ObservableList<ContributionProperties> data) {
         code_column.setCellValueFactory(new PropertyValueFactory<>("contribution_code"));
         academic_year_column.setCellValueFactory(new PropertyValueFactory<>("academic_year"));
         sem_column.setCellValueFactory(new PropertyValueFactory<>("contribution_sem"));
@@ -82,7 +91,6 @@ public class AddContributionControl {
         academic_year_column.setStyle("-fx-alignment: CENTER;");
         sem_column.setStyle("-fx-alignment: CENTER;");
         amount_column.setStyle("-fx-alignment: CENTER;");
-
         contribution_data_table.setOnMouseClicked(event -> {
             // Make sure the user clicked on a populated item
             ContributionProperties contribution = contribution_data_table.getSelectionModel().getSelectedItem();
@@ -96,19 +104,24 @@ public class AddContributionControl {
                 edit_contribution_button.setDisable(false);
             }
         });
-
         contribution_data_table.setItems(data);
     }
 
+    /**
+     * Clear the form.
+     */
     @FXML
-    private void clear_selection_button_clicked(){
+    private void clear_selection_button_clicked() {
         semester_combobox.getSelectionModel().selectFirst();
         amount_textfield.clear();
         edit_contribution_button.setDisable(true);
     }
 
+    /**
+     * Edit the values in the database.
+     */
     @FXML
-    private void edit_contribution_button_clicked(){
+    private void edit_contribution_button_clicked() {
         try {
             String edit_contribution_query = "UPDATE `contributions` SET `semester` = ?, `amount` = ? WHERE `contribution_code` = ?;";
             PreparedStatement edit_contribution = connect.prepareStatement(edit_contribution_query);
@@ -119,7 +132,7 @@ public class AddContributionControl {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        initialize(this.org_code, this.academic_year);
+        initialize(this.org_code);
         clear_selection_button_clicked();
     }
 }
