@@ -148,6 +148,8 @@ public class BuficomInfoControl {
     private void edit_contribution_button_clicked() {
         try {
             Stage add_contribution_stage = new Stage();
+            add_contribution_stage.setResizable(false);
+
             add_contribution_stage.initModality(Modality.APPLICATION_MODAL);
             FXMLLoader add_contribution_loader = new FXMLLoader(
                     Main.class.getResource("BUFICOM-FRAMES/add-contribution-form.fxml"));
@@ -171,7 +173,7 @@ public class BuficomInfoControl {
         try {
             String org_code_query = "SELECT * FROM `manages` AS m LEFT JOIN `organizations` AS o "
                     + "ON m.`organization_code` = o.`organization_code`\n"
-                    + "WHERE `officer_id` =  \"" + user_id_number + "\";";
+                    + "WHERE `officer_id` =  '" + user_id_number + "';";
             PreparedStatement get_org_code = connect.prepareStatement(org_code_query);
             ResultSet result = get_org_code.executeQuery();
             if (result.next()) {

@@ -95,9 +95,9 @@ public class StudentsRecordsControl {
     private ObservableList<ContributionProperties> getContributions() {
         ObservableList<ContributionProperties> contributions_list = FXCollections.observableArrayList();
         try {
-            String contribution_data_query = "SELECT `contribution_code`, `semester`,`amount` FROM `contributions` WHERE `academic_year` = \""
-                    + academic_year + "\" AND `collecting_org_code` = \"" + org_code
-                    + "\" ORDER BY `contribution_code` ASC;";
+            String contribution_data_query = "SELECT `contribution_code`, `semester`,`amount` FROM `contributions` WHERE `academic_year` = '"
+                    + academic_year + "' AND `collecting_org_code` = '" + org_code
+                    + "' ORDER BY `contribution_code` ASC;";
 
             PreparedStatement get_contributions_data = connect.prepareStatement(contribution_data_query);
             ResultSet result = get_contributions_data.executeQuery();
@@ -140,7 +140,7 @@ public class StudentsRecordsControl {
         try {
             String program_code_query = "SELECT DISTINCT `program_code` \n"
                     + "FROM `members` AS m LEFT JOIN `students` AS s ON m.`member_id` = s.`id_number`\n"
-                    + "WHERE m.`organization_code` = \"" + org_code + "\";";
+                    + "WHERE m.`organization_code` = '" + org_code + "';";
             PreparedStatement get_program_code = connect.prepareStatement(program_code_query);
             ResultSet result = get_program_code.executeQuery();
             while (result.next()) {
@@ -226,22 +226,22 @@ public class StudentsRecordsControl {
             // get the list of every member in the organization
             members_data_query = "SELECT `id_number`, `first_name`,`middle_name`, `last_name`, `suffix_name`, `year_level` "
                     + "FROM `members` AS m LEFT JOIN `students` AS s ON m.`member_id` = s.`id_number` "
-                    + "WHERE m.`organization_code` = \"" + org_code + "\" "
+                    + "WHERE m.`organization_code` = '" + org_code + "' "
                     + "ORDER BY `last_name` ASC, `first_name` ASC, `middle_name` ASC, `program_code` ASC, `year_level` ASC;";
         } else if (program_code_search == null && year_level_search == null) {
             // get the list of every student with matching id number
             members_data_query = "SELECT `id_number`, `first_name`,`middle_name`, `last_name`, `suffix_name`, `year_level` "
                     + "FROM `members` AS m LEFT JOIN `students` AS s ON m.`member_id` = s.`id_number` "
-                    + "WHERE m.`organization_code` = \"" + org_code + "\" "
-                    + "AND s.`id_number` LIKE \"%" + id_number_search + "%\" "
+                    + "WHERE m.`organization_code` = '" + org_code + "' "
+                    + "AND s.`id_number` LIKE '%" + id_number_search + "%' "
                     + "ORDER BY `last_name` ASC, `first_name` ASC, `middle_name` ASC;";
         } else if (id_number_search == null) {
             // get the list of every student in the searched block
             members_data_query = "SELECT `id_number`, `first_name`,`middle_name`, `last_name`, `suffix_name`, `year_level` "
                     + "FROM `members` AS m LEFT JOIN `students` AS s ON m.`member_id` = s.`id_number` "
-                    + "WHERE m.`organization_code` = \"" + org_code + "\" "
-                    + "AND s.`program_code` = \"" + program_code_search + "\" "
-                    + "AND s.`year_level` = \"" + year_level_search + "\" "
+                    + "WHERE m.`organization_code` = '" + org_code + "' "
+                    + "AND s.`program_code` = '" + program_code_search + "' "
+                    + "AND s.`year_level` = '" + year_level_search + "' "
                     + "ORDER BY `last_name` ASC, `first_name` ASC, `middle_name` ASC;";
         } else {
             return null;
@@ -272,9 +272,9 @@ public class StudentsRecordsControl {
                 } else {
                     // get their status for first sem
                     payment_status_query = "SELECT `status` FROM `pays` "
-                            + "WHERE `payer_id` = \"" + id_number + "\" "
-                            + "AND `contribution_code` = \""
-                            + contribution_data_table.getItems().get(0).getContribution_code() + "\" "
+                            + "WHERE `payer_id` = '" + id_number + "' "
+                            + "AND `contribution_code` = '"
+                            + contribution_data_table.getItems().get(0).getContribution_code() + "' "
                             + "ORDER BY `transaction_id` DESC;";
 
                     get_payment_status = connect.prepareStatement(payment_status_query);
@@ -292,9 +292,9 @@ public class StudentsRecordsControl {
                     second_sem_status = "Paid"; // if there is no contribution to be paid
                 } else {
                     // get their status for second sem
-                    payment_status_query = "SELECT `status` FROM `pays` WHERE `payer_id` = \"" + id_number + "\" "
-                            + "AND `contribution_code` = \""
-                            + contribution_data_table.getItems().get(1).getContribution_code() + "\" "
+                    payment_status_query = "SELECT `status` FROM `pays` WHERE `payer_id` = '" + id_number + "' "
+                            + "AND `contribution_code` = '"
+                            + contribution_data_table.getItems().get(1).getContribution_code() + "' "
                             + "ORDER BY `transaction_id` DESC;";
                     get_payment_status = connect.prepareStatement(payment_status_query);
                     result_2 = get_payment_status.executeQuery();
@@ -343,6 +343,7 @@ public class StudentsRecordsControl {
                 non_selected.showAndWait();
             } else {
                 Stage transaction_stage = new Stage();
+                transaction_stage.setResizable(false);
                 transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
@@ -375,6 +376,7 @@ public class StudentsRecordsControl {
         if (contribution_data_table.getItems().get(0).getContribution_amount() > 0) {
             StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
             Stage transaction_stage = new Stage();
+            transaction_stage.setResizable(false);
             transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("review-transaction-form.fxml"));
@@ -422,6 +424,7 @@ public class StudentsRecordsControl {
                 non_selected.showAndWait();
             } else {
                 Stage transaction_stage = new Stage();
+                transaction_stage.setResizable(false);
                 transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
@@ -454,6 +457,7 @@ public class StudentsRecordsControl {
         if (contribution_data_table.getItems().get(1).getContribution_amount() > 0) {
             StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
             Stage transaction_stage = new Stage();
+            transaction_stage.setResizable(false);
             transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("review-transaction-form.fxml"));

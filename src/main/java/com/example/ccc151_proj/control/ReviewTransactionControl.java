@@ -73,8 +73,8 @@ public class ReviewTransactionControl {
             String payment_info_query = "SELECT `id_number`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `transaction_id`, `transaction_datetime`, `amount`, `payment_mode`, `payer_receipt`, `status`, `transaction_message`\n"
                     + "FROM `pays` AS p LEFT JOIN `contributions` AS c ON p.`contribution_code` = c.`contribution_code`\n"
                     + "LEFT JOIN `students` AS s ON p.`payer_id` = s.`id_number` \n"
-                    + "WHERE c.`contribution_code` = \"" + contribution_code + "\"\n"
-                    + "AND p.`payer_id` = \"" + payer_id_number + "\"\n"
+                    + "WHERE c.`contribution_code` = '" + contribution_code + "'\n"
+                    + "AND p.`payer_id` = '" + payer_id_number + "'\n"
                     + "ORDER BY `transaction_id` DESC;";
             PreparedStatement get_payment_info = connect.prepareStatement(payment_info_query);
             ResultSet result = get_payment_info.executeQuery();

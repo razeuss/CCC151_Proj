@@ -78,11 +78,24 @@ public class LoginProcess implements Initializable {
         } else {
             // if the user is not listed in the database
             if (!isUserListed(this.id_input.getText(), passwordValue())) {
-                Alert connection_error = new Alert(Alert.AlertType.ERROR);
+                ButtonType forgot_password = new ButtonType("Forgot Password", ButtonBar.ButtonData.OTHER);
+                ButtonType ok_button = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+                Alert connection_error = new Alert(Alert.AlertType.ERROR, "Wrong ID or Password.",ok_button, forgot_password);
                 connection_error.setTitle("Login Unsuccessful");
                 connection_error.setHeaderText(null);
-                connection_error.setContentText("Wrong ID or Password.");
-                connection_error.showAndWait();
+                Optional<ButtonType> result = connection_error.showAndWait();
+                result.ifPresent(res -> {
+                    if (result.get() == forgot_password) {
+                        Alert inform = new Alert(Alert.AlertType.INFORMATION);
+                        inform.setTitle("Notify the Developer.");
+                        inform.setHeaderText("Request for a password change.");
+                        inform.setContentText("Please email c6918434@gmail.com your Student ID and request for password change. Thank You");
+                        inform.showAndWait();
+                        connection_error.close();
+                    } else {
+                        connection_error.close();
+                    }
+                });
                 return;
             }
 
@@ -166,6 +179,7 @@ public class LoginProcess implements Initializable {
         try {
             // create a new stage for the main frame
             Stage main_stage = new Stage();
+            main_stage.setResizable(false);
             main_stage.setTitle("Contribution Payment System");
             main_stage.setResizable(false);
 
@@ -226,7 +240,7 @@ public class LoginProcess implements Initializable {
         String recorded_pass = null;
         try {
             // fetch the password from the database
-            String check_query = "SELECT `password` FROM users WHERE `user_id` = \"" + id_number + "\";";
+            String check_query = "SELECT `password` FROM users WHERE `user_id` = '" + id_number + "';";
             PreparedStatement check_user_info = LoginProcess.connect.prepareStatement(check_query);
             ResultSet result = check_user_info.executeQuery();
             if (result.next())
@@ -253,8 +267,8 @@ public class LoginProcess implements Initializable {
         String user_position = "";
         try {
             // fetch the position of the user from the database
-            String position_query = "SELECT `position` FROM `manages` WHERE `officer_id` = \""
-                    + id_input.getText() + "\";";
+            String position_query = "SELECT `position` FROM `manages` WHERE `officer_id` = '"
+                    + id_input.getText() + "';";
             PreparedStatement check_user_position = connect.prepareStatement(position_query);
             ResultSet result = check_user_position.executeQuery();
             if (result.next())

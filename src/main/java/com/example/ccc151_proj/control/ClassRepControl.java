@@ -139,7 +139,7 @@ public class ClassRepControl {
                     + "`year_level`, `program_code`, `position`, `organization_code` "
                     + "FROM `users` AS u LEFT JOIN `students` AS s ON u.`user_id` = s.`id_number` "
                     + "LEFT JOIN `manages` AS o ON u.`user_id` = o.`officer_id` "
-                    + "WHERE `user_id` = \"" + user_id_number + "\";";
+                    + "WHERE `user_id` = '" + user_id_number + "';";
 
             // prepare then execute the query
             PreparedStatement setup_user_data = connect.prepareStatement(user_data_query);
@@ -189,9 +189,9 @@ public class ClassRepControl {
         // fetch the data from the database then store here
         ObservableList<ContributionProperties> contributions_list = FXCollections.observableArrayList();
         try {
-            String user_data_query = "SELECT `contribution_code`, `semester`,`amount` FROM `contributions` WHERE `academic_year` = \""
-                    + academic_year + "\" AND `collecting_org_code` = \"" + org_code.getText()
-                    + "\" ORDER BY `contribution_code` ASC;";
+            String user_data_query = "SELECT `contribution_code`, `semester`,`amount` FROM `contributions` WHERE `academic_year` = '"
+                    + academic_year + "' AND `collecting_org_code` = '" + org_code.getText()
+                    + "' ORDER BY `contribution_code` ASC;";
 
             PreparedStatement get_contributions_data = connect.prepareStatement(user_data_query);
             ResultSet result = get_contributions_data.executeQuery();
@@ -280,17 +280,17 @@ public class ClassRepControl {
             // specified
             members_data_query = "SELECT `id_number`, `first_name`,`middle_name`, `last_name`, `suffix_name`, `year_level` "
                     + "FROM `members` AS m LEFT JOIN `students` AS s ON m.`member_id` = s.`id_number` "
-                    + "WHERE m.`organization_code` = \"" + org_code.getText() + "\" "
-                    + "AND s.`program_code` = \"" + user.getProgram_code()
-                    + "\" " + "AND s.`year_level` = \"" + user.getYear_level() + "\" "
+                    + "WHERE m.`organization_code` = '" + org_code.getText() + "' "
+                    + "AND s.`program_code` = '" + user.getProgram_code()
+                    + "' " + "AND s.`year_level` = '" + user.getYear_level() + "' "
                     + "ORDER BY `last_name` ASC, `first_name` ASC, `middle_name` ASC;";
         } else {
             members_data_query = "SELECT `id_number`, `first_name`,`middle_name`, `last_name`, `suffix_name`, `year_level` "
                     + "FROM `members` AS m LEFT JOIN `students` AS s ON m.`member_id` = s.`id_number` "
-                    + "WHERE m.`organization_code` = \"" + org_code.getText() + "\" "
-                    + "AND s.`program_code` = \"" + user.getProgram_code() + "\" "
-                    + "AND s.`year_level` = \"" + user.getYear_level() + "\" "
-                    + "AND s.`id_number` LIKE \"%" + id_number_search + "%\" "
+                    + "WHERE m.`organization_code` = '" + org_code.getText() + "' "
+                    + "AND s.`program_code` = '" + user.getProgram_code() + "' "
+                    + "AND s.`year_level` = '" + user.getYear_level() + "' "
+                    + "AND s.`id_number` LIKE '%" + id_number_search + "%' "
                     + "ORDER BY `last_name` ASC, `first_name` ASC, `middle_name` ASC;";
         }
 
@@ -319,9 +319,9 @@ public class ClassRepControl {
                 } else {
                     // get their status for first sem
                     payment_status_query = "SELECT `status` FROM `pays` "
-                            + "WHERE `payer_id` = \"" + id_number + "\" "
-                            + "AND `contribution_code` = \""
-                            + contribution_data_table.getItems().get(0).getContribution_code() + "\" "
+                            + "WHERE `payer_id` = '" + id_number + "' "
+                            + "AND `contribution_code` = '"
+                            + contribution_data_table.getItems().get(0).getContribution_code() + "' "
                             + "ORDER BY `transaction_id` DESC;";
 
                     get_payment_status = connect.prepareStatement(payment_status_query);
@@ -339,9 +339,9 @@ public class ClassRepControl {
                     second_sem_status = "Paid"; // if there is no contribution to be paid
                 } else {
                     // get their status for second sem
-                    payment_status_query = "SELECT `status` FROM `pays` WHERE `payer_id` = \"" + id_number + "\" "
-                            + "AND `contribution_code` = \""
-                            + contribution_data_table.getItems().get(1).getContribution_code() + "\" "
+                    payment_status_query = "SELECT `status` FROM `pays` WHERE `payer_id` = '" + id_number + "' "
+                            + "AND `contribution_code` = '"
+                            + contribution_data_table.getItems().get(1).getContribution_code() + "' "
                             + "ORDER BY `transaction_id` DESC;";
                     get_payment_status = connect.prepareStatement(payment_status_query);
                     result_2 = get_payment_status.executeQuery();
@@ -416,6 +416,7 @@ public class ClassRepControl {
                 non_selected.showAndWait();
             } else {
                 Stage transaction_stage = new Stage();
+                transaction_stage.setResizable(false);
                 transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
@@ -448,6 +449,7 @@ public class ClassRepControl {
         if (contribution_data_table.getItems().get(0).getContribution_amount() > 0) {
             StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
             Stage transaction_stage = new Stage();
+            transaction_stage.setResizable(false);
             transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("review-transaction-form.fxml"));
@@ -495,6 +497,7 @@ public class ClassRepControl {
                 non_selected.showAndWait();
             } else {
                 Stage transaction_stage = new Stage();
+                transaction_stage.setResizable(false);
                 transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
                 FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("transaction-form.fxml"));
@@ -527,6 +530,7 @@ public class ClassRepControl {
         if (contribution_data_table.getItems().get(1).getContribution_amount() > 0) {
             StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
             Stage transaction_stage = new Stage();
+            transaction_stage.setResizable(false);
             transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("review-transaction-form.fxml"));

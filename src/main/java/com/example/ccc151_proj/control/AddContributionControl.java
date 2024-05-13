@@ -60,8 +60,8 @@ public class AddContributionControl {
         ObservableList<ContributionProperties> contribution_list = FXCollections.observableArrayList();
         try {
             String contribution_info_query = "SELECT `contribution_code`, `semester`, `amount` FROM `contributions` "
-                    + "WHERE `collecting_org_code` = \"" + this.org_code + "\" "
-                    + "AND `academic_year` = \"" + this.academic_year + "\";";
+                    + "WHERE `collecting_org_code` = '" + this.org_code + "' "
+                    + "AND `academic_year` = '" + this.academic_year + "';";
             PreparedStatement get_contribution_info = connect.prepareStatement(contribution_info_query);
             ResultSet result = get_contribution_info.executeQuery();
             while (result.next()) {

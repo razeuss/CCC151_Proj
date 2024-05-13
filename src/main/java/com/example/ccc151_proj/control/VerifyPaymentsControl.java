@@ -74,8 +74,8 @@ public class VerifyPaymentsControl {
     private void setupContributions(){
         try {
             String contribution_code_query = "SELECT `contribution_code` FROM `contributions` "
-                    + "WHERE `collecting_org_code` = \"" + this.org_code + "\" "
-                    + "AND `academic_year` = \"" + this.academic_year + "\";";
+                    + "WHERE `collecting_org_code` = '" + this.org_code + "' "
+                    + "AND `academic_year` = '" + this.academic_year + "';";
             PreparedStatement get_contribution_code = connect.prepareStatement(contribution_code_query);
             ResultSet result = get_contribution_code.executeQuery();
             ObservableList<String> contribution_list = FXCollections.observableArrayList();
@@ -102,8 +102,8 @@ public class VerifyPaymentsControl {
         try {
             String unverified_payments_query = "SELECT `id_number`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `status`, `transaction_id`\n"
                     + "FROM `pays` AS p LEFT JOIN `students` AS s ON p.`payer_id` = s.`id_number`\n"
-                    + "WHERE p.`contribution_code` = \"" + contribution_code_combobox.getSelectionModel().getSelectedItem() + "\" "
-                    + "AND p.`status` = \"Pending\";";
+                    + "WHERE p.`contribution_code` = '" + contribution_code_combobox.getSelectionModel().getSelectedItem() + "' "
+                    + "AND p.`status` = 'Pending';";
             PreparedStatement get_unverified_payments = connect.prepareStatement(unverified_payments_query);
             ResultSet result = get_unverified_payments.executeQuery();
             while (result.next()) {
@@ -156,7 +156,7 @@ public class VerifyPaymentsControl {
         try {
             String program_code_query = "SELECT DISTINCT `program_code` \n"
                     + "FROM `members` AS m LEFT JOIN `students` AS s ON m.`member_id` = s.`id_number`\n"
-                    + "WHERE m.`organization_code` = \"" + org_code + "\";";
+                    + "WHERE m.`organization_code` = '" + org_code + "';";
             PreparedStatement get_program_code = connect.prepareStatement(program_code_query);
             ResultSet result = get_program_code.executeQuery();
             while (result.next()) {
@@ -190,10 +190,10 @@ public class VerifyPaymentsControl {
             try {
                 String unverified_payments_query = "SELECT `id_number`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `status`, `transaction_id`\n"
                         + "FROM `pays` AS p LEFT JOIN `students` AS s ON p.`payer_id` = s.`id_number`\n"
-                        + "WHERE s.`program_code` = \"" + program_code_combobox.getSelectionModel().getSelectedItem() + "\" "
-                        + "AND s.`year_level` = \"" + year_level_combobox.getSelectionModel().getSelectedItem() + "\" "
-                        + "AND p.`contribution_code` = \"" + contribution_code_combobox.getSelectionModel().getSelectedItem() + "\" "
-                        + "AND p.`status` = \"Pending\";";
+                        + "WHERE s.`program_code` = '" + program_code_combobox.getSelectionModel().getSelectedItem() + "' "
+                        + "AND s.`year_level` = '" + year_level_combobox.getSelectionModel().getSelectedItem() + "' "
+                        + "AND p.`contribution_code` = '" + contribution_code_combobox.getSelectionModel().getSelectedItem() + "' "
+                        + "AND p.`status` = 'Pending';";
                 PreparedStatement get_unverified_payments = connect.prepareStatement(unverified_payments_query);
                 ResultSet result = get_unverified_payments.executeQuery();
                 while (result.next()) {
@@ -232,9 +232,9 @@ public class VerifyPaymentsControl {
             try {
                 String search_id_query = "SELECT `id_number`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `status`, `transaction_id`\n"
                         + "FROM `pays` AS p LEFT JOIN `students` AS s ON p.`payer_id` = s.`id_number`\n"
-                        + "WHERE p.`payer_id` LIKE \"%" + search_id_textfield.getText() + "%\" "
-                        + "AND p.`contribution_code` = \"" + contribution_code_combobox.getSelectionModel().getSelectedItem() + "\"\n"
-                        + "AND p.`status` = \"Pending\";";
+                        + "WHERE p.`payer_id` LIKE '%" + search_id_textfield.getText() + "%' "
+                        + "AND p.`contribution_code` = '" + contribution_code_combobox.getSelectionModel().getSelectedItem() + "'\n"
+                        + "AND p.`status` = 'Pending';";
                 PreparedStatement get_student_id = connect.prepareStatement(search_id_query);
                 ResultSet result = get_student_id.executeQuery();
                 while (result.next()) {
@@ -283,6 +283,7 @@ public class VerifyPaymentsControl {
         if (payment != null) {
             try {
                 Stage transaction_stage = new Stage();
+                transaction_stage.setResizable(false);
                 transaction_stage.initModality(Modality.APPLICATION_MODAL);
                 FXMLLoader verify_form_loader = new FXMLLoader(
                         Main.class.getResource("BUFICOM-FRAMES/verify-transaction-form.fxml"));

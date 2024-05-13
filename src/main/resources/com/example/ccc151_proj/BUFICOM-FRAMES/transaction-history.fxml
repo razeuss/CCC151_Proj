@@ -80,7 +80,7 @@
          <contextMenu>
             <ContextMenu fx:id="student_table_context_menu">
                <items>
-                  <MenuItem fx:id="verify_menu" mnemonicParsing="false" onAction="#verify_contribution" text="Modify Contribution" />
+                  <MenuItem fx:id="view_menu" mnemonicParsing="false" onAction="#review_contribution" text="View Contribution" />
                </items>
             </ContextMenu>
          </contextMenu>
