@@ -96,7 +96,8 @@ public class TransactionHistoryControl {
             String unverified_payments_query = "SELECT `id_number`, `first_name`, `middle_name`, `last_name`, `suffix_name`, `status`, `transaction_id`\n"
                     + "FROM `pays` AS p LEFT JOIN `students` AS s ON p.`payer_id` = s.`id_number`\n"
                     + "WHERE p.`contribution_code` = \"" + contribution_code_combobox.getSelectionModel().getSelectedItem() + "\" "
-                    + "AND (p.`status` = \"Accepted\" OR p.`status` = \"Rejected\");";
+                    + "AND (p.`status` = \"Accepted\" OR p.`status` = \"Rejected\") "
+                    + "ORDER BY `transaction_id` DESC;";
             PreparedStatement get_unverified_payments = connect.prepareStatement(unverified_payments_query);
             ResultSet result = get_unverified_payments.executeQuery();
             while (result.next()) {
@@ -186,7 +187,8 @@ public class TransactionHistoryControl {
                         + "WHERE s.`program_code` = \"" + program_code_combobox.getSelectionModel().getSelectedItem() + "\" "
                         + "AND s.`year_level` = \"" + year_level_combobox.getSelectionModel().getSelectedItem() + "\" "
                         + "AND p.`contribution_code` = \"" + contribution_code_combobox.getSelectionModel().getSelectedItem() + "\" "
-                        + "AND (p.`status` = \"Accepted\" OR p.`status` = \"Rejected\");";
+                        + "AND (p.`status` = \"Accepted\" OR p.`status` = \"Rejected\") "
+                        + "ORDER BY `transaction_id` DESC;";
                 PreparedStatement get_unverified_payments = connect.prepareStatement(unverified_payments_query);
                 ResultSet result = get_unverified_payments.executeQuery();
                 while (result.next()) {
@@ -227,7 +229,8 @@ public class TransactionHistoryControl {
                         + "FROM `pays` AS p LEFT JOIN `students` AS s ON p.`payer_id` = s.`id_number`\n"
                         + "WHERE p.`payer_id` LIKE \"%" + search_id_textfield.getText() + "%\" "
                         + "AND p.`contribution_code` = \"" + contribution_code_combobox.getSelectionModel().getSelectedItem() + "\"\n"
-                        + "AND (p.`status` = \"Accepted\" OR p.`status` = \"Rejected\");";
+                        + "AND (p.`status` = \"Accepted\" OR p.`status` = \"Rejected\") "
+                        + "ORDER BY `transaction_id` DESC;";
                 PreparedStatement get_student_id = connect.prepareStatement(search_id_query);
                 ResultSet result = get_student_id.executeQuery();
                 while (result.next()) {

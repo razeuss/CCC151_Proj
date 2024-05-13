@@ -68,8 +68,7 @@ public class LoginProcess implements Initializable {
     @FXML
     private void loginOperation(ActionEvent event) {
         // if the user is listed and the password was changed
-        if (isUserListed(this.id_input.getText(), passwordValue())
-                && !passwordValue().equals(this.id_input.getText())) {
+        if (isUserListed(this.id_input.getText(), passwordValue()) && !passwordValue().equals(this.id_input.getText())) {
             // close the login stage
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 

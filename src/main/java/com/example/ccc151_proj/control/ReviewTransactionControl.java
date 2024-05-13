@@ -101,8 +101,8 @@ public class ReviewTransactionControl {
                 receipt_link.setOnAction(e -> {
                     viewReceipt(receipt_image);
                 });
-                transaction_status.setText(result.getString("status"));
             }
+            transaction_status.setText(result.getString("status"));
             // display the transaction comments if there is any
             String transaction_message = result.getString("transaction_message");
             if (!result.wasNull())

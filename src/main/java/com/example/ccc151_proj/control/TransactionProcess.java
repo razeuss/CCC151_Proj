@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
@@ -34,7 +33,7 @@ import java.util.ResourceBundle;
  * For recording transactions.
  */
 public class TransactionProcess {
-    private final Connection connect = DataManager.getConnect();
+    private static Connection connect;
     @FXML
     private URL location;
     @FXML
@@ -74,6 +73,7 @@ public class TransactionProcess {
      * @param contribution_code
      */
     public void initialize(String contribution_code) {
+        connect = DataManager.getConnect();
         // get the information of the contribution from its code
         this.contribution_code = contribution_code;
         String[] contribution_details = this.contribution_code.split("_");

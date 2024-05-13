@@ -72,10 +72,10 @@ public class ChangePasswordControl {
      */
     @FXML
     private void verify_new_password(ActionEvent event) {
-        if (new_password.getText().length() >= 8 && newPasswordValue().equals(retypePasswordValue())
+        if (newPasswordValue().length() >= 8 && newPasswordValue().equals(retypePasswordValue())
                 && !newPasswordValue().equals(user_id)) {
             try {
-                String hashedPassword = Security.hashPassword(new_password.getText());
+                String hashedPassword = Security.hashPassword(newPasswordValue());
                 String change_password_query = "UPDATE `users` SET `password` = ? WHERE `user_id` = ?;";
                 PreparedStatement change_password = connect.prepareStatement(change_password_query);
                 change_password.setString(1, hashedPassword);
@@ -116,7 +116,7 @@ public class ChangePasswordControl {
                 throw new RuntimeException(e);
             }
         } else {
-            if (new_password.getText().length() < 8) {
+            if (newPasswordValue().length() < 8) {
                 Alert password_too_small = new Alert(Alert.AlertType.ERROR);
                 password_too_small.setTitle("Insufficient Password Length");
                 password_too_small.setHeaderText("Password too small.");
