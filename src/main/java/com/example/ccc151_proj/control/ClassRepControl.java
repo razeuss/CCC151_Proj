@@ -416,6 +416,7 @@ public class ClassRepControl {
                 non_selected.showAndWait();
             } else {
                 Stage transaction_stage = new Stage();
+                transaction_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
                 transaction_stage.setResizable(false);
                 transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -449,6 +450,7 @@ public class ClassRepControl {
         if (contribution_data_table.getItems().get(0).getContribution_amount() > 0) {
             StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
             Stage transaction_stage = new Stage();
+            transaction_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
             transaction_stage.setResizable(false);
             transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -497,6 +499,7 @@ public class ClassRepControl {
                 non_selected.showAndWait();
             } else {
                 Stage transaction_stage = new Stage();
+                transaction_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
                 transaction_stage.setResizable(false);
                 transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -530,6 +533,7 @@ public class ClassRepControl {
         if (contribution_data_table.getItems().get(1).getContribution_amount() > 0) {
             StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
             Stage transaction_stage = new Stage();
+            transaction_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
             transaction_stage.setResizable(false);
             transaction_stage.initModality(Modality.APPLICATION_MODAL);
 

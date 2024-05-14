@@ -12,9 +12,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -343,6 +345,7 @@ public class StudentsRecordsControl {
                 non_selected.showAndWait();
             } else {
                 Stage transaction_stage = new Stage();
+                transaction_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
                 transaction_stage.setResizable(false);
                 transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -376,6 +379,7 @@ public class StudentsRecordsControl {
         if (contribution_data_table.getItems().get(0).getContribution_amount() > 0) {
             StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
             Stage transaction_stage = new Stage();
+            transaction_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
             transaction_stage.setResizable(false);
             transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -424,6 +428,7 @@ public class StudentsRecordsControl {
                 non_selected.showAndWait();
             } else {
                 Stage transaction_stage = new Stage();
+                transaction_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
                 transaction_stage.setResizable(false);
                 transaction_stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -457,6 +462,7 @@ public class StudentsRecordsControl {
         if (contribution_data_table.getItems().get(1).getContribution_amount() > 0) {
             StudentPaymentInfo payer = student_data_table.getSelectionModel().getSelectedItem();
             Stage transaction_stage = new Stage();
+            transaction_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
             transaction_stage.setResizable(false);
             transaction_stage.initModality(Modality.APPLICATION_MODAL);
 

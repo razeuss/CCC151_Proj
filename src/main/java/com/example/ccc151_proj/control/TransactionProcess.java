@@ -255,6 +255,7 @@ public class TransactionProcess {
     private void receiptViewer() {
         if (!receipt_link.getText().equals("No File Chosen")) {
             Stage receipt_stage = new Stage();
+            receipt_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
             receipt_stage.setResizable(false);
             receipt_stage.initModality(Modality.APPLICATION_MODAL);
             try {
@@ -275,7 +276,6 @@ public class TransactionProcess {
                 Scene scene = new Scene(root);
                 receipt_stage.setTitle("Payment Receipt.");
                 receipt_stage.setScene(scene);
-                receipt_stage.setResizable(false);
                 receipt_stage.show();
             } catch (FileNotFoundException e) {
                 Alert file_not_found = new Alert(Alert.AlertType.INFORMATION);

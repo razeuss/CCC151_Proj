@@ -148,6 +148,7 @@ public class BuficomInfoControl {
     private void edit_contribution_button_clicked() {
         try {
             Stage add_contribution_stage = new Stage();
+            add_contribution_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
             add_contribution_stage.setResizable(false);
 
             add_contribution_stage.initModality(Modality.APPLICATION_MODAL);

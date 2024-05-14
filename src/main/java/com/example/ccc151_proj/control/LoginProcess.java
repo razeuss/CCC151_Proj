@@ -11,10 +11,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -179,9 +181,10 @@ public class LoginProcess implements Initializable {
         try {
             // create a new stage for the main frame
             Stage main_stage = new Stage();
+            main_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
             main_stage.setResizable(false);
             main_stage.setTitle("Contribution Payment System");
-            main_stage.setResizable(false);
+            main_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
 
             if (user_position.equals("Classroom Representative")) {
                 // initialize the loader

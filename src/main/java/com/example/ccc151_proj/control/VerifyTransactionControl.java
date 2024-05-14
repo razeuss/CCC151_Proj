@@ -111,6 +111,7 @@ public class VerifyTransactionControl {
      */
     private void viewReceipt(){
         Stage receipt_stage = new Stage();
+        receipt_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
         receipt_stage.setResizable(false);
         receipt_stage.initModality(Modality.APPLICATION_MODAL);
         try {
@@ -131,7 +132,6 @@ public class VerifyTransactionControl {
             Scene scene = new Scene(root);
             receipt_stage.setTitle("Payment Receipt.");
             receipt_stage.setScene(scene);
-            receipt_stage.setResizable(false);
             receipt_stage.show();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);

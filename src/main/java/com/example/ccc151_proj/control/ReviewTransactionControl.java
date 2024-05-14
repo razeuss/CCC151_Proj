@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.InputStream;
 import java.sql.*;
 
@@ -138,6 +139,7 @@ public class ReviewTransactionControl {
             Scene scene = new Scene(root);
             receipt_stage.setTitle("Payment Receipt.");
             receipt_stage.setScene(scene);
+            receipt_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
             receipt_stage.setResizable(false);
             receipt_stage.show();
         } catch (SQLException ex) {

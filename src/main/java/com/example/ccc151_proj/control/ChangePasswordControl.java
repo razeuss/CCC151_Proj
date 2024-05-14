@@ -9,8 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -97,6 +99,8 @@ public class ChangePasswordControl {
                             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 
                             Stage login_stage = new Stage();
+                            login_stage.setResizable(false);
+                            login_stage.getIcons().add(new Image(new File("src/src/app-logo.jpg").toURI().toString()));
                             // starts with the login scene
                             FXMLLoader login_view = new FXMLLoader(Main.class.getResource("login-frame.fxml"));
                             Scene login_scene = new Scene(login_view.load());
